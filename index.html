@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waldmeister Holzwerk – Handwerk mit Herz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown: #3d2b1f;
+      --gold:  #c8a876;
+      --cream: #f5f0e8;
+      --dark:  #1a1a1a;
+      --mid:   #7a5c44;
+      --light: #ede7d9;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLL PROGRESS BAR ────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(to right, var(--gold), #e8c88a, var(--gold));
+      z-index: 2000;
+      transition: width 0.08s linear;
+      border-radius: 0 2px 2px 0;
+      pointer-events: none;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(26,14,8,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: background 0.3s ease, padding 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(26,14,8,0.97);
+      padding: 0.7rem 2.5rem;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #d9cfc4;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 1001;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px; height: 2px;
+      background: var(--gold);
+      transition: all 0.3s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 900px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        background: rgba(26,14,8,0.98);
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+        z-index: 999;
+      }
+      .nav-links.open { transform: translateX(0); }
+      .nav-links a { font-size: 1.3rem; }
+    }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    #hero {
+      height: 100vh;
+      min-height: 600px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: -8%;
+      background: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&q=80') center center / cover no-repeat;
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(20,10,4,0.72) 0%, rgba(61,43,31,0.55) 60%, rgba(20,10,4,0.8) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      padding: 2rem 1.5rem;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 0.35rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 7vw, 5rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+    .hero-content h1 em { font-style: italic; color: var(--gold); }
+    .hero-content p {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      color: #d9cfc4;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      border-radius: 3px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    .btn-primary { background: var(--gold); color: var(--brown); }
+    .btn-primary:hover {
+      background: #d9b98a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(200,168,118,0.4);
+    }
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: #fff;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-indicator .line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(200,168,118,0.8), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+    @media (max-width: 480px) {
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .hero-buttons .btn { width: 100%; max-width: 280px; text-align: center; }
+      .scroll-indicator { display: none; }
+    }
+
+    /* ─── WOOD DIVIDER ───────────────────────────────── */
+    .wood-divider {
+      background: #160c05;
+      overflow: hidden;
+      position: relative;
+    }
+    .planks-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 5px 0;
+      overflow: hidden;
+    }
+    .wood-plank {
+      height: 48px;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0px, transparent 42px,
+          rgba(0,0,0,0.07) 42px, rgba(0,0,0,0.07) 43px
+        ),
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 6px,
+          transparent 6px, transparent 12px
+        ),
+        linear-gradient(
+          90deg,
+          #4a2c16 0%, #6b3e22 6%, #7d4e2e 13%,
+          #5a3419 22%, #8a5a36 31%, #6b3e22 41%,
+          #7d4e2e 51%, #5a3419 61%, #8a5a36 70%,
+          #6b3e22 80%, #4a2c16 88%, #7d4e2e 95%, #5a3419 100%
+        );
+      border-top:    1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(0,0,0,0.4);
+      transition: transform 0.95s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .plank-from-left  { transform: translateX(-110%); }
+    .plank-from-right { transform: translateX(110%); }
+    .wood-divider.active .plank-from-left,
+    .wood-divider.active .plank-from-right { transform: translateX(0); }
+    .plank-d1 { transition-delay: 0.00s; }
+    .plank-d2 { transition-delay: 0.14s; }
+    .plank-d3 { transition-delay: 0.28s; }
+    .plank-d4 { transition-delay: 0.42s; }
+
+    .emblem-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+    .wood-emblem { width: 190px; height: 190px; overflow: visible; }
+
+    /* SVG element animations */
+    .emblem-ring {
+      stroke-dasharray: 597;
+      stroke-dashoffset: 597;
+      transition: stroke-dashoffset 1.7s ease 0.5s;
+    }
+    .wood-divider.active .emblem-ring { stroke-dashoffset: 0; }
+
+    .emblem-inner { opacity: 0; transition: opacity 0.6s ease 1.2s; }
+    .wood-divider.active .emblem-inner { opacity: 1; }
+
+    .emblem-text { opacity: 0; transition: opacity 0.7s ease 1.45s; }
+    .wood-divider.active .emblem-text { opacity: 1; }
+
+    .emblem-deco { opacity: 0; transition: opacity 0.6s ease 1.7s; }
+    .wood-divider.active .emblem-deco { opacity: 1; }
+
+    /* ─── SECTIONS GENERIC ───────────────────────────── */
+    section { padding: 7rem 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--brown);
+      line-height: 1.25;
+      margin-bottom: 1.2rem;
+    }
+    .section-title.light { color: #fff; }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--mid);
+      line-height: 1.8;
+      max-width: 560px;
+    }
+    .gold-line {
+      display: block;
+      width: 60px; height: 3px;
+      background: var(--gold);
+      margin: 1.2rem 0 1.5rem;
+      border-radius: 2px;
+    }
+
+    @media (max-width: 480px) {
+      section { padding: 4.5rem 1.3rem; }
+    }
+
+    /* ─── FADE-IN ANIMATION ──────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── ÜBER UNS ───────────────────────────────────── */
+    #ueber { background: var(--light); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-text p {
+      color: #5a4a3f;
+      line-height: 1.85;
+      margin-top: 1.2rem;
+      font-size: 0.97rem;
+    }
+    .about-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .stat strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      font-weight: 700;
+      min-width: 70px;
+    }
+    .stat span {
+      font-size: 0.8rem;
+      color: var(--mid);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .about-image-wrap { position: relative; }
+    .about-image-wrap img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+    .about-image-wrap::before {
+      content: '';
+      position: absolute;
+      top: -20px; left: -20px;
+      width: 60%; height: 60%;
+      border: 2px solid var(--gold);
+      border-radius: 4px;
+      z-index: -1;
+      opacity: 0.5;
+    }
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-image-wrap { max-width: 500px; }
+    }
+    @media (max-width: 480px) {
+      .about-stats { gap: 1.2rem; }
+      .stat strong { font-size: 1.8rem; }
+    }
+
+    /* ─── HANDWERK ───────────────────────────────────── */
+    #handwerk { background: var(--brown); position: relative; overflow: hidden; }
+    #handwerk::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=60') center / cover;
+      opacity: 0.08;
+    }
+    #handwerk .section-sub { color: rgba(255,255,255,0.55); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .service-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(200,168,118,0.2);
+      border-radius: 6px;
+      padding: 2.5rem 2rem;
+      transition: transform 0.35s ease, background 0.35s ease,
+                  border-color 0.35s ease, box-shadow 0.35s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Image overlay per card on hover */
+    .service-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .sc-1::after { background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=55'); }
+    .sc-2::after { background-image: url('https://images.unsplash.com/photo-1611269154421-4e27233ac5c7?w=600&q=55'); }
+    .sc-3::after { background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=55'); }
+    .sc-4::after { background-image: url('https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=600&q=55'); }
+    .service-card:hover::after { opacity: 0.13; }
+    .service-card > * { position: relative; z-index: 1; }
+    .service-card:hover {
+      transform: translateY(-8px);
+      background: rgba(200,168,118,0.1);
+      border-color: rgba(200,168,118,0.5);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .service-icon { font-size: 2.5rem; margin-bottom: 1.2rem; display: block; }
+    .service-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .service-card p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.7; }
+
+    /* ─── GALERIE ────────────────────────────────────── */
+    #galerie { background: var(--cream); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 4px;
+      position: relative;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+    }
+    .gallery-item:nth-child(1) { grid-row: span 2; aspect-ratio: auto; }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(20,8,2,0.78) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span {
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      transform: translateY(12px);
+      transition: transform 0.4s ease;
+      display: inline-block;
+    }
+    .gallery-item:hover .gallery-overlay span { transform: translateY(0); }
+    @media (max-width: 768px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item:nth-child(1) { grid-row: auto; aspect-ratio: 4/3; }
+    }
+    @media (max-width: 500px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item { aspect-ratio: 4/3; }
+    }
+
+    /* ─── MATERIALIEN ────────────────────────────────── */
+    #materialien { background: var(--light); }
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .material-card {
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(61,43,31,0.07);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .material-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(61,43,31,0.16);
+    }
+    .material-img-wrap { aspect-ratio: 3/2; overflow: hidden; }
+    .material-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s ease;
+    }
+    .material-card:hover .material-img-wrap img { transform: scale(1.07); }
+    .material-info { padding: 1.2rem 1.4rem 1.5rem; }
+    .material-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(200,168,118,0.4);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+      margin-bottom: 0.55rem;
+    }
+    .material-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--brown);
+      margin-bottom: 0.45rem;
+    }
+    .material-info p { font-size: 0.84rem; color: var(--mid); line-height: 1.65; }
+    @media (max-width: 900px) {
+      .materials-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .materials-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── KONTAKT ────────────────────────────────────── */
+    #kontakt { background: var(--cream); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .contact-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--brown);
+      margin-top: 2rem;
+      margin-bottom: 0.6rem;
+    }
+    .contact-info p, .contact-info a {
+      color: var(--mid);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      text-decoration: none;
+      display: block;
+    }
+    .contact-info a:hover { color: var(--gold); }
+    form { display: flex; flex-direction: column; gap: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    label {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      font-weight: 600;
+    }
+    input, textarea {
+      padding: 0.85rem 1rem;
+      border: 1px solid #d6ccbc;
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      background: #fff;
+      color: var(--dark);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      outline: none;
+      resize: vertical;
+      width: 100%;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,168,118,0.15);
+    }
+    textarea { min-height: 140px; }
+    .btn-form {
+      align-self: flex-start;
+      padding: 0.9rem 2.4rem;
+      background: var(--brown);
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-form:hover {
+      background: #2a1c12;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(61,43,31,0.35);
+    }
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    @media (max-width: 480px) {
+      .btn-form { width: 100%; text-align: center; }
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--dark);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .footer-socials { display: flex; gap: 1.2rem; }
+    .footer-socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      border: 1px solid rgba(200,168,118,0.3);
+      border-radius: 50%;
+      color: rgba(200,168,118,0.7);
+      transition: all 0.3s ease;
+    }
+    .footer-socials a:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-3px);
+    }
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+  </style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Waldmeister</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#ueber"      onclick="closeMenu()">Über uns</a></li>
+    <li><a href="#handwerk"   onclick="closeMenu()">Handwerk</a></li>
+    <li><a href="#galerie"    onclick="closeMenu()">Galerie</a></li>
+    <li><a href="#materialien" onclick="closeMenu()">Materialien</a></li>
+    <li><a href="#kontakt"    onclick="closeMenu()">Kontakt</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menü öffnen">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-tag">Seit 1987 · Handgemacht · Regional</span>
+    <h1>Holz lebt.<br><em>Wir gestalten es.</em></h1>
+    <p>Waldmeister Holzwerk steht für ehrliches Handwerk, natürliche Materialien und Möbel, die Generationen überdauern.</p>
+    <div class="hero-buttons">
+      <a href="#handwerk" class="btn btn-primary">Unser Handwerk</a>
+      <a href="#galerie"  class="btn btn-outline">Galerie ansehen</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="line"></div>
+    <span>Scrollen</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     HOLZ-DIVIDER  –  Animierter Übergang Hero → Über uns
+     ═══════════════════════════════════════════════════ -->
+<div class="wood-divider" id="woodDivider">
+
+  <!-- Obere Dielen -->
+  <div class="planks-group">
+    <div class="wood-plank plank-from-left  plank-d1"></div>
+    <div class="wood-plank plank-from-right plank-d2"></div>
+  </div>
+
+  <!-- SVG-Emblem in der Mitte -->
+  <div class="emblem-center">
+    <svg class="wood-emblem" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Äußerer Kreis – wird eingezeichnet -->
+      <circle cx="110" cy="110" r="95"
+        fill="none" stroke="#c8a876" stroke-width="1.6"
+        class="emblem-ring" />
+
+      <!-- Innerer Kreis, dünn -->
+      <circle cx="110" cy="110" r="78"
+        fill="none" stroke="rgba(200,168,118,0.22)" stroke-width="0.7"
+        class="emblem-inner" />
+
+      <!-- Oberes Rautenelement -->
+      <polygon points="110,18 116,31 110,44 104,31"
+        fill="none" stroke="#c8a876" stroke-width="1.1"
+        class="emblem-deco" />
+      <!-- Unteres Rautenelement -->
+      <polygon points="110,176 116,189 110,202 104,189"
+        fill="none" stroke="#c8a876" stroke-width="1.1"
+        class="emblem-deco" />
+
+      <!-- Linke Dekorlinie -->
+      <line x1="15" y1="110" x2="58" y2="110"
+        stroke="#c8a876" stroke-width="0.8" class="emblem-deco" />
+      <!-- Rechte Dekorlinie -->
+      <line x1="162" y1="110" x2="205" y2="110"
+        stroke="#c8a876" stroke-width="0.8" class="emblem-deco" />
+
+      <!-- W-Initiale -->
+      <text x="110" y="102"
+        text-anchor="middle"
+        font-family="Playfair Display, serif"
+        font-size="48" fill="#c8a876" font-weight="700"
+        class="emblem-text">W</text>
+
+      <!-- WALDMEISTER -->
+      <text x="110" y="124"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="7.8" fill="rgba(200,168,118,0.85)"
+        letter-spacing="4.8" font-weight="500"
+        class="emblem-text">WALDMEISTER</text>
+
+      <!-- HOLZWERK -->
+      <text x="110" y="139"
+        text-anchor="middle"
+        font-family="Inter, sans-serif"
+        font-size="7.8" fill="rgba(200,168,118,0.55)"
+        letter-spacing="5" font-weight="400"
+        class="emblem-text">HOLZWERK</text>
+
+    </svg>
+  </div>
+
+  <!-- Untere Dielen (umgekehrte Richtung) -->
+  <div class="planks-group">
+    <div class="wood-plank plank-from-right plank-d3"></div>
+    <div class="wood-plank plank-from-left  plank-d4"></div>
+  </div>
+
+</div>
+
+<!-- ÜBER UNS -->
+<section id="ueber">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <span class="section-label">Über uns</span>
+        <h2 class="section-title">Handwerk mit Geschichte &amp; Zukunft</h2>
+        <span class="gold-line"></span>
+        <p>Gegründet 1987 in einem kleinen Schuppen am Waldrand, hat sich Waldmeister Holzwerk zu einer angesehenen Tischlerei in der Region entwickelt. Was gleichblieb: unsere Leidenschaft für das Material Holz und der Anspruch, jedes Stück mit größter Sorgfalt zu fertigen.</p>
+        <p>Wir verarbeiten ausschließlich zertifiziertes Holz aus nachhaltiger Forstwirtschaft. Jeder Makel, jede Maserung erzählt eine Geschichte – und wir machen sie zum Mittelpunkt unserer Arbeit.</p>
+        <div class="about-stats">
+          <div class="stat">
+            <strong class="counter" data-target="37" data-suffix="+" data-final="37+">37+</strong>
+            <span>Jahre Erfahrung</span>
+          </div>
+          <div class="stat">
+            <strong class="counter" data-target="2000" data-suffix="+" data-final="2 000+">2 000+</strong>
+            <span>Projekte umgesetzt</span>
+          </div>
+          <div class="stat">
+            <strong class="counter" data-target="100" data-suffix="%" data-final="100%">100%</strong>
+            <span>Naturholz</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-image-wrap fade-in fade-in-delay-2">
+        <img src="https://images.unsplash.com/photo-1611269154421-4e27233ac5c7?w=800&q=80" alt="Holzwerkstatt" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HANDWERK -->
+<section id="handwerk">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="fade-in">
+      <span class="section-label">Was wir machen</span>
+      <h2 class="section-title light">Unser Handwerk</h2>
+      <span class="gold-line"></span>
+      <p class="section-sub">Von der ersten Skizze bis zur Auslieferung – jedes Projekt entsteht in enger Abstimmung mit unseren Kunden.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card sc-1 fade-in fade-in-delay-1">
+        <span class="service-icon">🪑</span>
+        <h3>Möbelbau</h3>
+        <p>Maßgefertigte Möbel für Wohnräume, Büros und öffentliche Bereiche – funktional, langlebig und zeitlos schön.</p>
+      </div>
+      <div class="service-card sc-2 fade-in fade-in-delay-2">
+        <span class="service-icon">🔨</span>
+        <h3>Restaurierung</h3>
+        <p>Alten Möbelstücken neues Leben einzuhauchen ist eine Kunst. Wir pflegen das Erbe und erhalten den Charakter.</p>
+      </div>
+      <div class="service-card sc-3 fade-in fade-in-delay-3">
+        <span class="service-icon">🏠</span>
+        <h3>Innenausbau</h3>
+        <p>Treppen, Einbauschränke, Wandverkleidungen und Deckenelemente – wir gestalten Räume mit Holz aus einer Hand.</p>
+      </div>
+      <div class="service-card sc-4 fade-in fade-in-delay-4">
+        <span class="service-icon">✏️</span>
+        <h3>Maßanfertigung</h3>
+        <p>Ihr Wunsch, unsere Expertise. Wir fertigen Einzelstücke nach Ihren Vorgaben – vom Entwurf bis zur Lieferung.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">Galerie</span>
+      <h2 class="section-title" style="text-align:center;">Einblicke in unsere Arbeit</h2>
+      <span class="gold-line" style="margin:1rem auto 0;display:block;"></span>
+    </div>
+    <div class="gallery-grid">
+
+      <!-- Item 1: spans 2 rows -->
+      <div class="gallery-item fade-in">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80" alt="Handgefertigtes Sofa" loading="lazy" />
+        <div class="gallery-overlay"><span>Wohnzimmermöbel</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-1">
+        <img src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=700&q=80" alt="Holzwerkstatt" loading="lazy" />
+        <div class="gallery-overlay"><span>Werkstatt</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-2">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=700&q=80" alt="Holzstuhl" loading="lazy" />
+        <div class="gallery-overlay"><span>Stühle nach Maß</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-1">
+        <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=700&q=80" alt="Holztisch" loading="lazy" />
+        <div class="gallery-overlay"><span>Massivholztisch</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-2">
+        <img src="https://images.unsplash.com/photo-1528323273322-d81458248d40?w=700&q=80" alt="Bücherregal" loading="lazy" />
+        <div class="gallery-overlay"><span>Einbauregal</span></div>
+      </div>
+
+      <!-- Neue Galerie-Bilder -->
+      <div class="gallery-item fade-in fade-in-delay-3">
+        <img src="https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=700&q=80" alt="Holzdetail" loading="lazy" />
+        <div class="gallery-overlay"><span>Holzdetails</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-1">
+        <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=700&q=80" alt="Werkzeug" loading="lazy" />
+        <div class="gallery-overlay"><span>Handwerkzeug</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-2">
+        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=700&q=80" alt="Wohndesign" loading="lazy" />
+        <div class="gallery-overlay"><span>Wohndesign</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-3">
+        <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=700&q=80" alt="Schreiner" loading="lazy" />
+        <div class="gallery-overlay"><span>Handwerkskunst</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-1">
+        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=700&q=80" alt="Schlafzimmer" loading="lazy" />
+        <div class="gallery-overlay"><span>Schlafzimmermöbel</span></div>
+      </div>
+      <div class="gallery-item fade-in fade-in-delay-2">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80" alt="Modernes Interieur" loading="lazy" />
+        <div class="gallery-overlay"><span>Modernes Interieur</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- MATERIALIEN -->
+<section id="materialien">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;">
+      <span class="section-label">Unsere Hölzer</span>
+      <h2 class="section-title" style="text-align:center;">Materialien mit Charakter</h2>
+      <span class="gold-line" style="margin:1rem auto 0;display:block;"></span>
+      <p class="section-sub" style="text-align:center;margin:1.2rem auto 0;max-width:580px;">
+        Wir arbeiten ausschließlich mit ausgewählten Hölzern aus nachhaltiger Forstwirtschaft – jedes mit seiner eigenen Geschichte und seinem unverwechselbaren Charakter.
+      </p>
+    </div>
+    <div class="materials-grid">
+
+      <div class="material-card fade-in fade-in-delay-1">
+        <div class="material-img-wrap">
+          <img src="https://images.unsplash.com/photo-1531907700752-62799b2a3e84?w=600&q=80" alt="Eichenholz" loading="lazy" />
+        </div>
+        <div class="material-info">
+          <span class="material-badge">Hartholz</span>
+          <h3>Eiche</h3>
+          <p>Robust, langlebig und zeitlos. Eiche ist das beliebteste Holz für Massivmöbel und klassischen Innenausbau.</p>
+        </div>
+      </div>
+
+      <div class="material-card fade-in fade-in-delay-2">
+        <div class="material-img-wrap">
+          <img src="https://images.unsplash.com/photo-1566847438217-76e4d4c0f934?w=600&q=80" alt="Nussbaumholz" loading="lazy" />
+        </div>
+        <div class="material-info">
+          <span class="material-badge">Edelholz</span>
+          <h3>Nussbaum</h3>
+          <p>Tiefes Braun mit edler Maserung – Nussbaum verleiht jedem Stück eine warme, luxuriöse Ausstrahlung.</p>
+        </div>
+      </div>
+
+      <div class="material-card fade-in fade-in-delay-3">
+        <div class="material-img-wrap">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Kirschholz" loading="lazy" />
+        </div>
+        <div class="material-info">
+          <span class="material-badge">Fruchtholz</span>
+          <h3>Kirsche</h3>
+          <p>Rötlich-warme Töne und feine Maserung machen Kirsche zum Favoriten für edle Sitzmöbel und Vertäfelungen.</p>
+        </div>
+      </div>
+
+      <div class="material-card fade-in fade-in-delay-4">
+        <div class="material-img-wrap">
+          <img src="https://images.unsplash.com/photo-1568497453857-e8b48f7e74f2?w=600&q=80" alt="Ahornholz" loading="lazy" />
+        </div>
+        <div class="material-info">
+          <span class="material-badge">Hartholz</span>
+          <h3>Ahorn</h3>
+          <p>Hell, gleichmäßig und strapazierfähig – Ahorn ist ideal für moderne, klare Formen und helle Wohnkonzepte.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="fade-in">
+        <span class="section-label">Kontakt</span>
+        <h2 class="section-title">Schreiben Sie uns</h2>
+        <span class="gold-line"></span>
+        <p class="section-sub">Haben Sie ein Projekt im Sinn? Wir freuen uns auf Ihre Anfrage und melden uns innerhalb von 24 Stunden.</p>
+        <h3>Adresse</h3>
+        <p>Waldstraße 12<br />79098 Freiburg im Breisgau</p>
+        <h3>Telefon &amp; E-Mail</h3>
+        <a href="tel:+497612345678">+49 (0) 761 234 567 8</a>
+        <a href="mailto:info@waldmeister-holzwerk.de">info@waldmeister-holzwerk.de</a>
+        <h3>Öffnungszeiten</h3>
+        <p>Mo–Fr: 08:00 – 17:30 Uhr<br />Sa: 09:00 – 13:00 Uhr</p>
+      </div>
+      <form class="fade-in fade-in-delay-2" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Ihr Name</label>
+          <input type="text" id="name" name="name" placeholder="Max Mustermann" required />
+        </div>
+        <div class="form-group">
+          <label for="email">E-Mail-Adresse</label>
+          <input type="email" id="email" name="email" placeholder="max@beispiel.de" required />
+        </div>
+        <div class="form-group">
+          <label for="betreff">Betreff</label>
+          <input type="text" id="betreff" name="betreff" placeholder="Anfrage Massivholztisch" />
+        </div>
+        <div class="form-group">
+          <label for="nachricht">Nachricht</label>
+          <textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie Ihr Projekt..." required></textarea>
+        </div>
+        <button type="submit" class="btn-form">Anfrage senden</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Waldmeister</div>
+    <div class="footer-socials">
+      <a href="#" aria-label="Instagram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a href="#" aria-label="Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </a>
+      <a href="#" aria-label="Pinterest">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.03-2.83.19-.77 1.25-5.3 1.25-5.3s-.32-.64-.32-1.58c0-1.48.86-2.59 1.93-2.59.91 0 1.35.68 1.35 1.5 0 .91-.58 2.28-.88 3.55-.25 1.06.53 1.93 1.57 1.93 1.88 0 3.14-2.4 3.14-5.24 0-2.16-1.45-3.78-4.08-3.78-2.97 0-4.81 2.22-4.81 4.69 0 .85.25 1.45.64 1.91.18.22.2.3.14.55-.05.18-.15.62-.2.79-.07.27-.29.36-.53.26-1.4-.58-2.05-2.13-2.05-3.87 0-3.03 2.56-6.7 7.65-6.7 4.1 0 6.8 2.98 6.8 6.18 0 4.23-2.34 7.4-5.8 7.4-1.16 0-2.25-.62-2.63-1.32l-.72 2.72c-.24.9-.75 1.79-1.14 2.45.86.26 1.77.4 2.71.4 5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
+        </svg>
+      </a>
+    </div>
+    <p class="footer-copy">&copy; 2026 Waldmeister Holzwerk · Alle Rechte vorbehalten · Waldstraße 12, Freiburg</p>
+  </div>
+</footer>
+
+<script>
+  /* ─── SCROLL PROGRESS BAR ──────────────────────────── */
+  const progressBar = document.getElementById('progress-bar');
+
+  /* ─── NAVBAR + HERO PARALLAX ──────────────────────── */
+  const navbar = document.getElementById('navbar');
+  const heroBg = document.getElementById('heroBg');
+  const heroH  = window.innerHeight;
+
+  window.addEventListener('scroll', () => {
+    const sy   = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+
+    // Scroll-Fortschrittsbalken
+    progressBar.style.width = (sy / docH * 100) + '%';
+
+    // Navbar
+    navbar.classList.toggle('scrolled', sy > 60);
+
+    // Hero-Parallax: Hintergrund scrollt langsamer als Seite
+    if (sy < heroH) {
+      heroBg.style.transform = 'translateY(' + (sy * 0.28) + 'px)';
+    }
+  }, { passive: true });
+
+  /* ─── MOBILE MENU ──────────────────────────────────── */
+  const hamburger = document.getElementById('hamburger');
+  const navLinks  = document.getElementById('navLinks');
+
+  function toggleMenu() {
+    hamburger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+    document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ─── FADE-IN ON SCROLL ────────────────────────────── */
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const fadeObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        fadeObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  fadeEls.forEach(el => fadeObs.observe(el));
+
+  /* ─── HOLZ-DIVIDER ANIMATION ───────────────────────── */
+  const woodDivider = document.getElementById('woodDivider');
+  const woodObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        woodDivider.classList.add('active');
+        woodObs.unobserve(woodDivider);
+      }
+    });
+  }, { threshold: 0.25 });
+  woodObs.observe(woodDivider);
+
+  /* ─── ZÄHLER-ANIMATION ─────────────────────────────── */
+  function animateCounter(el) {
+    const target   = parseInt(el.dataset.target, 10);
+    const suffix   = el.dataset.suffix  || '';
+    const finalTxt = el.dataset.final   || (target + suffix);
+    const duration = 1800;
+    const t0       = performance.now();
+
+    (function step(ts) {
+      const pct    = Math.min((ts - t0) / duration, 1);
+      const eased  = 1 - Math.pow(1 - pct, 3); // ease-out cubic
+      const cur    = Math.round(eased * target);
+      if (pct < 1) {
+        el.textContent = cur + suffix;
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = finalTxt;
+      }
+    })(t0);
+  }
+
+  const counters    = document.querySelectorAll('.counter');
+  const counterObs  = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => counterObs.observe(el));
+
+  /* ─── FORMULAR-FEEDBACK ────────────────────────────── */
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'Gesendet ✓';
+    btn.style.background = '#4a7c59';
+    btn.style.color = '#fff';
+    btn.disabled = true;
+    setTimeout(() => {
+      e.target.reset();
+      btn.textContent = 'Anfrage senden';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.disabled = false;
+    }, 3500);
+  }
+</script>
+</body>
+</html>
